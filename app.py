@@ -53,24 +53,22 @@ if uploaded_file is not None:
         if properties:
             display_video_properties(properties)  # Display video properties
             output_format, new_bitrate, resolution_option, frame_rate, crf = user_conversion_inputs()  # Get user inputs
-            
-            output_file = None
-            error = None
+
             if st.button("Convert"):
                 with st.spinner("Converting video..."):
                     output_file, error = video_processor.convert(output_format, new_bitrate, resolution_option, frame_rate, crf)  # Perform conversion
             
-            # Display success message and download link if conversion is successful
-            if output_file:
-                st.success("Video converted successfully.")
-                
-                with open(output_file, "rb") as file:
-                    st.download_button("Download converted video", file, file_name=os.path.basename(output_file))
+                # Display success message and download link if conversion is successful
+                if output_file:
+                    st.success("Video converted successfully.")
                     
-                    # get video properties of new file
-                    new_properties = VideoProcessor(output_file).get_properties()
-                    if new_properties:
-                        st.write("New video properties:")
-                        display_video_properties(new_properties)
-            else:
-                st.error(f"Error converting video: {error}")
+                    with open(output_file, "rb") as file:
+                        st.download_button("Download converted video", file, file_name=os.path.basename(output_file))
+                        
+                        # get video properties of new file
+                        new_properties = VideoProcessor(output_file).get_properties()
+                        if new_properties:
+                            st.write("New video properties:")
+                            display_video_properties(new_properties)
+                else:
+                    st.error(f"Error converting video: {error}")
